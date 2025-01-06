@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro Motivacional</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        #texto {
+            font-size: 1.5em;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #motivacional {
+            font-size: 2.5em;
+            color: #00bcd4;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        #timer {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #milestones {
+            font-size: 1.2em;
+            color: #777;
+            text-align: center;
+            max-width: 90%;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .milestone-message {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-left: 5px solid #00bcd4;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="motivacional">Carregando frase motivacional...</div>
+    <div id="texto">Tempo desde que você decidiu mudar: 05/01/2025 às 21:00</div>
+    <div id="timer">00 meses, 00 dias, 00 horas, 00 minutos, 00 segundos</div>
+    <div id="milestones"></div>
+
+    <script>
+        const specificDate = new Date('2025-01-05T21:00:00');
+
+        const milestones = [
+            { time: 3600000, text: '1 hora', message: '🎉 Parabéns! A primeira hora é a mais difícil. Você já deu o primeiro passo!' },
+            { time: 43200000, text: '12 horas', message: '🌟 Incrível! 12 horas sem recair. Continue firme, você é mais forte do que pensa!' },
+            { time: 86400000, text: '1 dia', message: '🚀 Um dia inteiro! Cada hora é uma vitória. Mantenha o foco no seu propósito!' },
+            { time: 172800000, text: '2 dias', message: '💪 Dois dias de conquistas! Você está construindo um novo hábito. Não desista!' },
+            { time: 259200000, text: '3 dias', message: '🔥 Três dias sem recair! Você está se superando a cada momento. Continue assim!' },
+            { time: 345600000, text: '4 dias', message: '🌈 Quatro dias de progresso! Cada dia é uma prova da sua força interior.' },
+            { time: 432000000, text: '5 dias', message: '🚀 Cinco dias! Você está no caminho certo. Acredite no seu potencial!' },
+            { time: 518400000, text: '6 dias', message: '💎 Seis dias de determinação! Você está se tornando a melhor versão de si mesmo.' },
+            { time: 604800000, text: '1 semana', message: '🎊 Uma semana completa! Isso é incrível. Você está inspirando a si mesmo e aos outros!' },
+            { time: 1209600000, text: '2 semanas', message: '🌟 Duas semanas de vitórias! Você está provando que é capaz de superar qualquer desafio.' },
+            { time: 2592000000, text: '1 mês', message: '💪 Um mês de conquistas! Você está construindo um novo hábito. Não desista!' },
+            { time: 7776000000, text: '3 meses', message: '🔥 Três meses sem recair! Você está se superando a cada momento. Continue assim!' },
+            { time: 15552000000, text: '6 meses', message: '🌈 Meio ano de progresso! Cada dia é uma prova da sua força interior.' },
+            { time: 31536000000, text: '1 ano', message: '🎊 Um ano completo! Isso é incrível. Você está inspirando a si mesmo e aos outros!' },
+            { time: 63072000000, text: '2 anos', message: '🌟 Dois anos de vitórias! Você está provando que é capaz de superar qualquer desafio.' },
+            { time: 94608000000, text: '3 anos', message: '💎 Três anos de determinação! Você está se tornando a melhor versão de si mesmo.' },
+            { time: 126144000000, text: '4 anos', message: '🚀 Quatro anos! Você está no caminho certo. Acredite no seu potencial!' },
+            { time: 157680000000, text: '5 anos', message: '🎉 Cinco anos! Você é um exemplo de força e perseverança. Parabéns!' },
+        ];
+
+        const frasesMotivacionais = [
+            "Cada minuto que você resiste é uma vitória para o seu futuro. ⏳",
+            "Você está mais forte hoje do que era ontem. Continue assim! 💪",
+            "A jornada é difícil, mas você é mais forte do que qualquer desafio. 🛤️",
+            "Cada pequeno passo é um grande avanço na direção certa. 🐾",
+            "Você está construindo uma vida melhor, um dia de cada vez. 🏗️",
+            "A força que você precisa já está dentro de você. 🌟",
+            "Cada dia é uma nova chance para recomeçar e se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. 🕊️",
+            "Você está construindo um futuro brilhante. Não desista agora. ✨",
+            "Acredite no seu potencial. Ele é maior do que você imagina. 🌌",
+            "Cada dia é uma nova oportunidade para se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. 🕊️",
+            "Você está construindo um futuro brilhante. Não desista agora. ✨",
+            "Acredite no seu potencial. Ele é maior do que você imagina. 🌌",
+            "Cada dia é uma nova oportunidade para se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. 🕊️",
+            "Você está construindo um futuro brilhante. Não desista agora. ✨",
+            "Acredite no seu potencial. Ele é maior do que você imagina. 🌌",
+            "Cada dia é uma nova oportunidade para se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. 🕊️",
+            "Você está construindo um futuro brilhante. Não desista agora. ✨",
+            "Acredite no seu potencial. Ele é maior do que você imagina. 🌌",
+            "Cada dia é uma nova oportunidade para se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. 🕊️",
+            "Você está construindo um futuro brilhante. Não desista agora. ✨",
+            "Acredite no seu potencial. Ele é maior do que você imagina. 🌌",
+            "Cada dia é uma nova oportunidade para se fortalecer. 🌅",
+            "Você está no controle. Nada pode tirar isso de você. 🎯",
+            "A persistência é a chave para transformar sonhos em realidade. 🔑",
+            "Cada vez que você resiste, fica mais perto da liberdade. 🕊️",
+            "Você está escrevendo uma nova história para sua vida. Continue! 📖",
+            "A mudança começa com uma decisão. Você já deu o primeiro passo. 🚶‍♂️",
+            "Cada momento de resistência é um investimento no seu futuro. 💎",
+            "Você está se tornando a melhor versão de si mesmo. Não pare agora. 🌱",
+            "A força de vontade é como um músculo: quanto mais você usa, mais forte fica. 💪",
+            "Cada dia sem recair é uma vitória para sua mente e corpo. 🏆",
+            "Você está no caminho certo. Não olhe para trás. 🛤️",
+            "Acredite no processo. Os resultados virão. 🌱",
+            "Cada vez que você resiste, prova que é mais forte do que pensa. 💥",
+            "Você está se libertando de correntes invisíveis. Continue! 🔗",
+            "A vida é feita de escolhas. Escolha ser forte hoje. 🌟",
+            "Cada minuto que você resiste é um passo para a liberdade. Continue forte! 🕊️"
+        ];
+
+        function exibirFraseMotivacional() {
+            const fraseAleatoria = frasesMotivacionais[Math.floor(Math.random() * frasesMotivacionais.length)];
+            document.getElementById('motivacional').textContent = fraseAleatoria;
+        }
+
+        const achievedMilestones = new Set();
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - specificDate;
+
+            const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent =
+                `${months} meses, ${days} dias, ${hours} horas, ${minutes} minutos, ${seconds} segundos`;
+
+            milestones.forEach(milestone => {
+                if (diff >= milestone.time && !achievedMilestones.has(milestone.text)) {
+                    achievedMilestones.add(milestone.text); 
+
+                    const milestoneElement = document.createElement('div');
+                    milestoneElement.className = 'milestone-message';
+                    milestoneElement.textContent = milestone.message;
+                    document.getElementById('milestones').appendChild(milestoneElement);
+
+                    document.getElementById('milestones').scrollTop = document.getElementById('milestones').scrollHeight;
+                }
+            });
+        }
+
+        exibirFraseMotivacional();
+
+        setInterval(updateTimer, 1000);
+
+        updateTimer();
+    </script>
+
+</body>
+
+</html>
